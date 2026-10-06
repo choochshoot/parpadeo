@@ -1,0 +1,85 @@
+﻿:root {
+  --paper: #e6e6d4;
+  --light: #ffbe00;
+  --line: rgba(230,230,212,.16);
+  color-scheme: dark;
+}
+body {
+  background: radial-gradient(ellipse at 50% 40%, #11313a, #051419 70%);
+  color: var(--paper);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+.stage { position: relative; display: grid; min-height: 100svh; padding: 2rem 0; place-items: center; isolation: isolate; overflow: clip; }
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .32;
+  background-image:
+    linear-gradient(#b9d7d92e 1px, transparent 1px),
+    linear-gradient(90deg, #b9d7d92e 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 50% 45%, #0009 15%, #000 45%, transparent 85%);
+  pointer-events: none;
+}
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 42%, transparent 35%, #020b102e 75%, #020b1066 100%);
+  pointer-events: none;
+}
+.hero { width: min(94%, 1120px); text-align: center; }
+.eyebrow { margin: 0 0 1.4rem; color: #e6e6d499; font-size: .62rem; letter-spacing: .2em; line-height: 1.8; }
+.logo-shell { position: relative; padding: 2.5rem .85rem; border: 1px solid var(--line); border-radius: 1.35rem; background: linear-gradient(145deg, #ffffff09, #ffffff03); box-shadow: 0 25px 60px #00000025, inset 0 1px 0 #ffffff0d; }
+.logo-mount { position: relative; z-index: 2; width: 100%; aspect-ratio: 747.86504 / 183.45411; }
+.logo-mount svg { width: 100%; height: auto; overflow: visible; }
+.logo-reflection { position: absolute; left: 12%; right: 12%; bottom: 12%; height: 1px; background: linear-gradient(90deg, transparent, #ffbe00b3, transparent); opacity: .25; }
+.controls { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 1.4rem; }
+.button { min-height: 44px; min-width: 108px; border: 1px solid #ffbe0099; border-radius: 999px; padding: .65rem 1.1rem; background: var(--light); color: #071418; cursor: pointer; transition: transform .2s ease; }
+.button--ghost { color: var(--paper); background: transparent; border-color: #e6e6d438; }
+.button:focus-visible { outline: 2px solid var(--paper); outline-offset: 5px; }
+.button:disabled { opacity: .45; cursor: default; }
+.button[aria-pressed="true"] { border-color: var(--light); color: var(--light); }
+.sound-experience {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: center;
+  gap: .35rem .75rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1rem auto 0;
+  padding: 0 .5rem;
+}
+.headphones-visual { position: relative; width: 56px; height: 56px; pointer-events: none; }
+.headphones-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; }
+.headphones-visual img:first-child { opacity: 1; }
+.sound-experience__copy { text-align: left; }
+.sound-experience__copy p { margin: 0; line-height: 1.6; }
+.sound-experience__copy p:first-child { color: var(--paper); font-size: .75rem; letter-spacing: .045em; }
+.sound-experience__copy p:last-child { color: #e6e6d499; font-size: .68rem; }
+.sound-experience .button { grid-column: 1 / -1; justify-self: center; }
+@media (min-width: 480px) {
+  .sound-experience { grid-template-columns: 64px auto auto; gap: .85rem; }
+  .headphones-visual { width: 64px; height: 64px; }
+  .sound-experience .button { grid-column: auto; }
+}
+.sound-status { margin: .25rem 1rem 0; min-height: 2.8em; color: #e6e6d499; font-size: .7rem; line-height: 1.5; }
+.status { min-height: 2.8em; margin: 1rem 1rem 0; color: #e6e6d499; font-size: .72rem; line-height: 1.6; letter-spacing: .04em; }
+.ambient { position: absolute; width: min(34rem, 90vw); aspect-ratio: 1; border-radius: 50%; z-index: -2; pointer-events: none; }
+.ambient--one { top: -15rem; left: -10rem; background: radial-gradient(circle, #1c819e22, transparent 70%); }
+.ambient--two { right: -15rem; bottom: -16rem; background: radial-gradient(circle, #ffbe0018, transparent 70%); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (min-width: 700px) {
+  .hero { width: min(92%, 1120px); }
+  .logo-shell { padding: clamp(2.5rem, 5vw, 4.5rem); border-radius: 2rem; }
+  .eyebrow { margin-bottom: 2rem; font-size: .72rem; letter-spacing: .32em; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .button:not(:disabled):hover { transform: translateY(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}

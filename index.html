@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="PARPADEO — premium animated eyewear brand logo study." />
+    <title>PARPADEO — Logo Motion Study</title>
+  </head>
+  <body>
+    <main class="stage" aria-labelledby="page-title">
+      <div class="ambient ambient--one"></div>
+      <div class="ambient ambient--two"></div>
+
+      <section class="hero">
+        <p class="eyebrow">BRAND MOTION STUDY · EYEWEAR</p>
+        <h1 id="page-title" class="sr-only">PARPADEO</h1>
+
+        <div class="logo-shell">
+          <div id="logoMount" class="logo-mount" aria-label="Logo animado de PARPADEO"></div>
+          <div class="logo-reflection" aria-hidden="true"></div>
+        </div>
+
+        <div class="controls" aria-label="Controles de animación">
+          <button id="replayButton" class="button" type="button" disabled>Repetir</button>
+          <button id="pauseButton" class="button button--ghost" type="button" disabled>Pausar</button>
+        </div>
+
+        <div class="sound-experience" role="group" aria-labelledby="soundExperienceTitle">
+          <div id="headphonesVisual" class="headphones-visual" aria-hidden="true">
+            <img src="%BASE_URL%assets/images/headphones/view-2.png" width="192" height="192" alt="" decoding="async" />
+            <img src="%BASE_URL%assets/images/headphones/view-1.png" width="192" height="192" alt="" decoding="async" />
+            <img src="%BASE_URL%assets/images/headphones/view-3.png" width="192" height="192" alt="" decoding="async" />
+            <img src="%BASE_URL%assets/images/headphones/view-4.png" width="192" height="192" alt="" decoding="async" />
+          </div>
+          <div class="sound-experience__copy">
+            <p id="soundExperienceTitle">Experiencia sonora</p>
+            <p>Mejor con audífonos</p>
+          </div>
+          <button id="soundButton" class="button button--ghost" type="button" aria-pressed="false" aria-describedby="soundStatus" disabled>Activar sonido</button>
+        </div>
+
+        <p id="status" class="status" role="status">Cargando identidad…</p>
+        <p id="soundStatus" class="sound-status" role="status">Activar sonido reinicia la animación.</p>
+        <noscript>Activa JavaScript para ver la identidad animada de PARPADEO.</noscript>
+      </section>
+    </main>
+
+    <script type="module" src="/src/js/main.js"></script>
+  </body>
+</html>
