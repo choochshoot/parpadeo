@@ -1,4 +1,4 @@
-﻿# PARPADEO — Logo motion
+# PARPADEO — Logo motion
 
 Identidad experimental de lentes. Vite + GSAP + MorphSVGPlugin, SVG inline y módulos ES.
 
@@ -41,6 +41,8 @@ Al terminar correctamente, la web estará en `https://choochshoot.github.io/parp
 
 ## SVG y conservación
 
+El lettering se presenta en `#1C819E`, definido por `--wordmark-ink` en CSS y aplicado en runtime al relleno de las letras. Se conservan los colores de ojos, iris, destellos y esfera; el archivo SVG fuente permanece intacto.
+
 `public/assets/svg/parpadeo-logo.svg` permanece intacto. Los paths `path73` y `path73-9` conservan sus IDs y datos; se ocultan en runtime para mostrar los ojos nuevos dentro de `layer8`. El lettering conserva sus paths y matrices originales. La E solo recibe una compresión temporal en su contenedor, que vuelve a escala 1.
 
 Los adjuntos se copian sin editar en `public/assets/svg/eyes/`:
@@ -67,7 +69,9 @@ MorphSVG transforma las copias de los nuevos ojos durante el parpadeo. Al reabri
 
 La secuencia dura 14.8 s y termina sin bucle, con el lettering y la luz en reposo. Los filtros originales permanecen estáticos. Fuera del breve morph se animan transform y opacity; no se mide geometría por fotograma.
 
-El lettering tiene una sombra oscura desplazada 2 unidades a la derecha y 6 hacia abajo, con desenfoque de 3 unidades y opacidad de 0.65. El filtro SVG genera la silueta trasera sin duplicar paths ni IDs; acompaña automáticamente la entrada de cada letra y el glitch de la E. Sus parámetros no se animan y la sombra permanece en movimiento reducido. Solo se aplica al lettering, no a los ojos ni a la esfera luminosa. El barrido luminoso excluye este filtro de su máscara.
+El lettering tiene una sombra oscura desplazada 2 unidades a la derecha y 6 hacia abajo, con desenfoque de 5 unidades y opacidad de 0.65. El filtro SVG genera la silueta trasera sin duplicar paths ni IDs; acompaña automáticamente la entrada de cada letra y el glitch de la E. Sus parámetros no se animan y la sombra permanece en movimiento reducido. Solo se aplica al lettering, no a los ojos ni a la esfera luminosa. El barrido luminoso excluye este filtro de su máscara.
+
+El control circular (`paletteController.js`) permite cambiar el color dominante del lettering: norte crema `#E6E6D4`, este teal `#1C819E`, sur amarillo `#FFBE00` y oeste azul oscuro `#005874`. GSAP interpola la variable CSS del lettering durante 0.65 segundos, independientemente de la reproducción del logo. Admite clic, toque y flechas del teclado; con movimiento reducido aplica el color inmediatamente. No calcula porcentajes de superficie de la composición. La imagen decorativa WebP conserva transparencia, mide 384 × 384 px y pesa 30,238 bytes; se muestra a 176–192 px. Los paths originales permanecen intactos.
 
 Con `prefers-reduced-motion` se muestran los ojos nuevos abiertos y el logo estático, sin timeline. Cambiar la preferencia durante la reproducción restaura ese estado, elimina el barrido temporal y deshabilita los controles. Repetir reinicia la secuencia; ocultar la pestaña pausa sin perder una pausa manual.
 
@@ -85,11 +89,17 @@ El audio se carga solo al activarlo y se reproduce con Web Audio. Pausa, cambio 
 node --test --test-isolation=none tests/eyes.test.js tests/finale.test.js tests/letterGlitch.test.js
 node --test --test-isolation=none tests/audio.test.js
 node --test --test-isolation=none tests/headphones.test.js
+node --test --test-isolation=none tests/particles.test.js
+node --test --test-isolation=none tests/particleBounce.test.js
 npm run build
 ```
 
 Las pruebas verifican los assets, la alineación geométrica de las cejas, el hash del logo original, el crecimiento, las pausas de la mirada, el cierre final, el regreso de la luz y el reinicio. También comprueban los 900 ms de la E, su destello y la restauración al desactivar movimiento. No sustituyen la revisión visual en navegador.
 
 Revisar a 320, 390 y 1440 px, además de móvil horizontal. Comprobar el parpadeo y sus cejas, pausa/repetición durante el cierre y el barrido, y movimiento reducido antes de cargar y en mitad del morph. Al reducir movimiento deben verse los ojos nuevos abiertos y la esfera en la O. Los ojos antiguos deben permanecer ocultos.
+
+El modo opcional de partículas (`letterParticles.js`) usa GSAP + Physics2DPlugin. Al activarlo, termina la secuencia en silencio y genera círculos dentro del relleno original mediante `isPointInFill`, conservando huecos y transformaciones. El lettering original se oculta temporalmente sin modificar sus paths. Los puntos heredan el color de la paleta. Clic/toque sobre el logo o el botón accesible «Dispersar partículas» produce una dispersión con gravedad y retorno; el ratón atrae puntos cercanos. «Volver al logo», «Repetir» o activar sonido restaura el lettering. El límite es de 700 puntos en móvil y 1400 en escritorio, según el ancho al generar la capa; las coordenadas SVG escalan al redimensionar. Con movimiento reducido se permite la versión estática, sin dispersión. Ocultar la pestaña cancela el movimiento. Verificar visualmente la interacción, los cambios de paleta y la restauración durante una dispersión.
+
+La dispersión calcula el contacto con la línea amarilla en coordenadas SVG en cada activación. Cada punto cae con gravedad, toca la línea con su borde inferior, rebota con amortiguación variable y regresa al lettering. Los impactos quedan dentro de los extremos de la línea; una única onda de opacidad acompaña el contacto. Redimensionar durante el vuelo cancela el movimiento y restaura los puntos para evitar contactos desalineados. El brillo se restaura también al salir del modo o esconder la pestaña. `particleBounce.test.js` verifica contacto, extremos y trayectoria ascendente del rebote.
 
 No se incluyen servicios externos ni fuentes remotas. `.gitignore` excluye dependencias y compilados.

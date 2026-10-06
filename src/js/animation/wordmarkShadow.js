@@ -14,7 +14,7 @@ export function prepareWordmarkShadow(svg, wordmark) {
 
   const shadow = document.createElementNS(namespace, "feDropShadow");
   Object.entries({
-    dx: "2", dy: "6", stdDeviation: "3",
+    dx: "2", dy: "6", stdDeviation: "5",
     "flood-color": "#00080c", "flood-opacity": "0.65"
   }).forEach(([name, value]) => shadow.setAttribute(name, value));
   filter.append(shadow);

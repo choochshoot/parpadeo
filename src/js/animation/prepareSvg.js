@@ -28,6 +28,17 @@ export function prepareSvg(svg, eyeAssets) {
 
   const eyeStates = prepareEyeStates(eyeLayer, qa(svg, SVG_IDS.eyePaths), eyeAssets);
   const wordmark = q(svg, SVG_IDS.wordmarkLayer);
+  const letters = qa(svg, SVG_IDS.letters);
+  letters.forEach((letter) => {
+    [letter, ...letter.querySelectorAll("*")].forEach((node) => {
+      // Recolor the lettering paint only, preserving the O's optical details.
+      if (node.matches(SVG_IDS.finalOIris)) return;
+      if (["#005874", "rgb(0, 88, 116)"].includes(node.style.fill.toLowerCase())) {
+        node.style.fill = "var(--wordmark-ink, #1c819e)";
+        node.setAttribute("data-particle-ink", "");
+      }
+    });
+  });
   prepareWordmarkShadow(svg, wordmark);
 
   return {
@@ -36,7 +47,7 @@ export function prepareSvg(svg, eyeAssets) {
     eyeLayer,
     eyeStates,
     eyePaths: eyeStates.eyes.map(({ group }) => group),
-    letters: qa(svg, SVG_IDS.letters).map(wrap),
+    letters: letters.map(wrap),
     luminousLayer: q(svg, SVG_IDS.luminousLayer),
     luminousMotion: wrap(q(svg, SVG_IDS.luminousLayer)),
     luminousCircles: qa(svg, SVG_IDS.luminousCircles).map(wrap),

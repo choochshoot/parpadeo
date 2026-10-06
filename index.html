@@ -23,6 +23,21 @@
         <div class="controls" aria-label="Controles de animación">
           <button id="replayButton" class="button" type="button" disabled>Repetir</button>
           <button id="pauseButton" class="button button--ghost" type="button" disabled>Pausar</button>
+          <button id="particlesButton" class="button button--ghost" type="button" aria-pressed="false" aria-describedby="particlesHint" disabled>Activar partículas</button>
+          <button id="disperseButton" class="button button--ghost" type="button" hidden>Dispersar partículas</button>
+        </div>
+        <p id="particlesHint" class="sound-status" role="status"></p>
+
+        <div id="paletteController" class="palette-controller" role="group" aria-labelledby="paletteTitle">
+          <p id="paletteTitle">Explora la paleta</p>
+          <div class="palette-controller__pad">
+            <img class="palette-controller__visual" src="%BASE_URL%assets/images/palette-controller.webp" width="384" height="384" alt="" decoding="async" />
+            <button type="button" data-direction="north" aria-label="Norte: lettering crema" aria-pressed="false">N</button>
+            <button type="button" data-direction="east" aria-label="Este: lettering teal" aria-pressed="true">E</button>
+            <button type="button" data-direction="south" aria-label="Sur: lettering amarillo" aria-pressed="false">S</button>
+            <button type="button" data-direction="west" aria-label="Oeste: lettering azul oscuro" aria-pressed="false">O</button>
+          </div>
+          <p role="status">Teal · #1C819E</p>
         </div>
 
         <div class="sound-experience" role="group" aria-labelledby="soundExperienceTitle">

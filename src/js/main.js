@@ -8,6 +8,8 @@ import { prepareLightSweep } from "./animation/lightSweep.js";
 import { prepareLetterFlash } from "./animation/letterFlash.js";
 import { createLogoAudio } from "./animation/logoAudio.js";
 import { prepareHeadphones } from "./animation/headphones.js";
+import { createPaletteController } from "./animation/paletteController.js";
+import { createLetterParticles } from "./animation/letterParticles.js";
 
 const logoMount = document.querySelector("#logoMount");
 const replayButton = document.querySelector("#replayButton");
@@ -17,8 +19,15 @@ const reflection = document.querySelector(".logo-reflection");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const soundButton = document.querySelector("#soundButton");
 const soundStatus = document.querySelector("#soundStatus");
+const particlesButton = document.querySelector("#particlesButton");
+const disperseButton = document.querySelector("#disperseButton");
+const particlesHint = document.querySelector("#particlesHint");
+let particles;
 const events = new AbortController();
 const listenerOptions = { signal: events.signal };
+const disposePalette = createPaletteController(
+  document.querySelector("#paletteController"), document.querySelector(".stage"), reducedMotion
+);
 let soundLoading = false;
 let timeline;
 let context;
@@ -64,6 +73,7 @@ function updateControls() {
 }
 
 function configureMotion() {
+  leaveParticles();
   logoAudio.stop();
   if (reducedMotion.matches) {
     logoAudio.disable();
@@ -104,6 +114,8 @@ async function boot() {
     if (!svg) throw new Error("El archivo no contiene un SVG válido.");
     parts = prepareSvg(svg, eyeAssets);
     parts.headphoneFrames = headphoneFrames;
+    particles = createLetterParticles(parts, { mount: logoMount, reducedMotion, reflection });
+    particlesButton.disabled = false;
     configureMotion();
     reducedMotion.addEventListener("change", configureMotion);
   } catch (error) {
@@ -118,6 +130,7 @@ async function boot() {
 
 replayButton.addEventListener("click", () => {
   if (!timeline || reducedMotion.matches) return;
+  leaveParticles();
   userPaused = false;
   logoAudio.stop();
   timeline.restart();
@@ -143,6 +156,7 @@ soundButton.addEventListener("click", async () => {
   try {
     if (await logoAudio.enable() && timeline && !reducedMotion.matches) {
       userPaused = false;
+      leaveParticles();
       logoAudio.stop();
       timeline.restart().paused(document.hidden);
       soundStatus.textContent = "Sonido activado · entrada del texto y barrido de luz.";
@@ -155,12 +169,49 @@ soundButton.addEventListener("click", async () => {
     if (!events.signal.aborted) updateSoundControl();
   }
 }, listenerOptions);
+function leaveParticles() {
+  particles?.deactivate();
+  particlesButton.setAttribute("aria-pressed", "false");
+  particlesButton.textContent = "Activar partículas";
+  disperseButton.hidden = true;
+  particlesHint.textContent = "";
+}
+
+particlesButton.addEventListener("click", () => {
+  if (!particles) return;
+  if (particles.active) {
+    leaveParticles();
+    return;
+  }
+  logoAudio.stop();
+  // Sample the final geometry, without triggering timeline callbacks or sound cues.
+  timeline?.pause().progress(1, true);
+  userPaused = false;
+  try {
+    particles.activate();
+    particlesButton.setAttribute("aria-pressed", "true");
+    particlesButton.textContent = "Volver al logo";
+    disperseButton.hidden = reducedMotion.matches;
+    particlesHint.textContent = reducedMotion.matches
+      ? "Partículas en reposo · movimiento reducido."
+      : "Toca las letras o pulsa Dispersar partículas para verlas salir y regresar.";
+  } catch (error) {
+    leaveParticles();
+    particlesHint.textContent = "No se pudo activar el efecto. El logo sigue disponible.";
+    console.error(error);
+  }
+  updateControls();
+}, listenerOptions);
+disperseButton.addEventListener("click", () => particles?.disperse(), listenerOptions);
+
 document.addEventListener("visibilitychange", () => {
   if (timeline && timeline.progress() < 1) timeline.paused(document.hidden || userPaused);
   logoAudio.sync();
 }, listenerOptions);
 if (import.meta.hot) import.meta.hot.dispose(() => {
   events.abort();
+  disposePalette();
+  particles?.dispose();
   logoAudio.dispose();
   context?.revert();
   parts?.lightSweep?.dispose();
