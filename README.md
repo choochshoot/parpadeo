@@ -15,7 +15,13 @@ npm run preview
 
 `dist/` contiene el sitio publicable. Para una subcarpeta: `npm run build -- --base=/nombre-del-repo/`.
 
-## Arquitectura
+## GitHub Pages
+
+En el repositorio `choochshoot/parpadeo`, abrir **Settings → Pages → Build and deployment → Source** y elegir **GitHub Actions**. Subir `.github/workflows/deploy.yml` a `main` para iniciar la publicación. El workflow instala dependencias con `npm ci`, ejecuta las pruebas, compila con `--base=/parpadeo/` y publica únicamente `dist/`.
+
+Al terminar correctamente, la web estará en `https://choochshoot.github.io/parpadeo/`. Cada push a `main` repetirá la publicación. No es necesario subir `dist` ni `node_modules`. La ejecución se puede consultar o reiniciar desde **Actions → Publish PARPADEO to GitHub Pages**.
+
+## Módulos
 
 - `selectors.js`: IDs originales del logo, sin renombrar.
 - `prepareSvg.js`: accesibilidad, contenedores neutros y sustitución visual de los ojos.
